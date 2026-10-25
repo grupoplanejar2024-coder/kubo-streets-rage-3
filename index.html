@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#121212">
+
+    <title>Streets of Rage 3 - Kubo Touch</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        html, body {
+            margin: 0;
+            min-height: 100%;
+            background: #121212;
+            color: #fff;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        header {
+            position: fixed;
+            top: 15px;
+            left: 15px;
+            z-index: 10;
+        }
+
+        .badge {
+            background: #1a8ccc;
+            padding: 7px 12px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: bold;
+        }
+
+        .game-card {
+            width: 100%;
+            max-width: 500px;
+            background: #1e1e1e;
+            border-radius: 18px;
+            overflow: hidden;
+            box-shadow: 0 4px 20px #0008;
+        }
+
+        .cover-container {
+            width: 100%;
+            height: 260px;
+            background: #000 url("sor3-cover.jpg") center / contain no-repeat;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        h1 {
+            margin-top: 0;
+            color: #33aaff;
+            font-size: 25px;
+        }
+
+        .meta-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 15px;
+            color: #aaa;
+            font-size: 12px;
+        }
+
+        .description, .details {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #ddd;
+        }
+
+        .details {
+            margin-bottom: 20px;
+        }
+
+        .btn-play {
+            display: block;
+            width: 100%;
+            padding: 14px;
+            border: 0;
+            border-radius: 7px;
+            background: #1a8ccc;
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .btn-play:hover {
+            background: #126599;
+        }
+
+        #game-container {
+            display: none;
+            position: fixed;
+            inset: 0;
+            z-index: 100;
+            width: 100%;
+            height: 100%;
+            background: #000;
+        }
+
+        #game-container.active {
+            display: block;
+        }
+
+        #status {
+            margin-top: 12px;
+            color: #ffcc66;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        #back-button {
+            display: none;
+            position: fixed;
+            top: 8px;
+            left: 8px;
+            z-index: 1000;
+            padding: 9px 12px;
+            border: 0;
+            border-radius: 6px;
+            background: #1a8ccc;
+            color: white;
+            cursor: pointer;
+        }
+
+        @media (max-width: 480px) {
+            body {
+                padding: 12px;
+            }
+            .cover-container {
+                height: 220px;
+            }
+            .content {
+                padding: 16px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <header>
+        <span class="badge">KUBO TOUCH</span>
+    </header>
+
+    <main class="game-card" id="game-card">
+        <div class="cover-container"></div>
+
+        <div class="content">
+            <h1>Streets of Rage 3</h1>
+
+            <div class="meta-info">
+                <span>🎮 1 a 2 Jogadores</span>
+                <span>📅 1994</span>
+                <span>🕹️ SEGA / Mega Drive</span>
+            </div>
+
+            <p class="description">
+                O encerramento épico da trilogia! Novos movimentos, armas utilizáveis e caminhos alternativos para impedir um plano cibernético.
+            </p>
+
+            <div class="details">
+                <ul>
+                    <li><strong>🔥 Novidades:</strong> Introdução do Dr. Zan e movimentos de corrida e rolagem.</li>
+                    <li><strong>⚡ Gênero:</strong> Beat 'em up / Ação</li>
+                </ul>
+            </div>
+
+            <button class="btn-play" id="play-button" onclick="startGame()">
+                JOGAR AGORA
+            </button>
+
+            <div id="status" role="status"></div>
+        </div>
+    </main>
+
+    <button id="back-button" onclick="backToMenu()">
+        ← Voltar ao menu
+    </button>
+
+    <div id="game-container"></div>
+
+    <script>
+        function startGame() {
+            const container = document.getElementById("game-container");
+
+            document.getElementById("game-card").style.display = "none";
+            container.style.display = "block";
+            container.innerHTML = "";
+
+            window.EJS_player = "#game-container";
+            window.EJS_core = "segaMD";
+            window.EJS_gameUrl = "https://raw.githubusercontent.com/grupoplanejar2024-coder/kubo-streets-rage/main/sor3.gen";
+            window.EJS_pathtodata = "https://cdn.emulatorjs.org/stable/data/";
+            window.EJS_gameName = "Streets of Rage 3";
+            window.EJS_language = "pt-BR";
+            window.EJS_startOnLoaded = true;
+
+            const oldLoader = document.getElementById("emulatorjs-loader");
+            if (oldLoader) oldLoader.remove();
+
+            const script = document.createElement("script");
+            script.id = "emulatorjs-loader";
+            script.src = window.EJS_pathtodata + "loader.js";
+            script.async = true;
+
+            script.onerror = function () {
+                alert("Erro ao carregar o EmulatorJS. Verifique a conexão.");
+            };
+
+            document.body.appendChild(script);
+        }
+
+        function backToMenu() {
+            location.reload();
+        }
+    </script>
+
+</body>
+</html>
